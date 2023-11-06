@@ -1,0 +1,11 @@
+{% load static %}{% block content%}
+
+<a href="/cart/">Cart ({{num_products_in_cart}})</a>
+<br><br>
+<form action="/search/" method="GET">
+    <input type="text" name="q"><button type="submit">Search</button>
+</form>
+{% for product in products %}
+<a href="/products-{{product.id}}/">{{product.name}}</a>
+{% endfor %}
+{% endblock %}
