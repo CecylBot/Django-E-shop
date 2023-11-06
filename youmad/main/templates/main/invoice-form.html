@@ -1,0 +1,190 @@
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Oswald:wght@400;500&display=swap" rel="stylesheet">
+
+    <title>TheChill - Invoice</title>
+    <style>
+        @font-face {
+            font-family: 'Oswald';
+            src: url('oswald-regular.woff2') format('woff2');
+            /* Add more font formats and paths if necessary */
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        .head {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid black;
+        }
+
+        .details,
+        .total {
+
+
+            margin-top: 20px;
+        }
+
+        .informations tbody {
+            width: 50%;
+            /* Makes sure two sections fit side by side with a little space in between */
+            border: 1px solid black;
+
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        tr,
+        .table td {
+            border: 1px solid black;
+            padding: 3px;
+            text-align: left;
+        }
+    </style>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+    <div class="head">
+        <h3>{{SupplierInformations.name}}</h3>
+        <p>Invoice number: {{invoice_number}}</p>
+    </div>
+    <div class="header">
+
+    </div>
+
+    <div class="details">
+        <table class="informations">
+
+            <tbody>
+                <tr>
+                    <td>Supplier:<br>
+                        <strong>{{SupplierInformations.name}}</strong><br>
+                        {{SupplierInformations.street}}<br>
+                        {{SupplierInformations.zip_adress}}<br>
+                        {{SupplierInformations.city}},{{SupplierInformations.country}}<br>
+                        IČO: {{SupplierInformations.ičo}}<br>
+                        <p>Some text with &#268;&#268;&#268;&#268;&#268;&#268;&#268;&#268;&#268;&#268;&#268; character</p>
+
+                        {% if SupplierInformations.DPH == True %}
+                        IČ DPH: {{SupplierInformations.ič_dph}}<br>
+                        {% endif %}
+                        DIČ: {{SupplierInformations.dič}}<br>
+
+                        Telefón: {{SupplierInformations.phone}}<br>
+                        E-mail:{{SupplierInformations.mail}}<br>
+                        {{SupplierInformations.website}}
+
+                    <td> Recipient:<br>
+                        {{order.customer_first_name}} {{order.customer_last_name}}<br>
+                        {{order.street}}<br>
+                        {{order.zip_adress}} {{order.city}}, {{order.country}}<br>
+                        Email: {{order.mail}}<br>
+                        Phone: {{order.phone}}</td>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td>More content for Column 1</td>
+                    <td> variable symbol: {{invoice_number}} <br>
+                        Order number: {{order.id}}<br>
+                        From the day: {{order.date|date:"d.m.Y"}}</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Items in order</th>
+                <th>Quantity</th>
+                <th>Price per item</th>
+                <th>Price</th>
+                <th>Discount </th>
+                {% if SupplierInformations.DPH == True%}
+                <th>DPH %</th>
+                <th>DPH</th>
+                <th>Total price with DPH</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in orderItems %}
+            <tr>
+                <td>{{ product.product_and_size.product.name }}, size: {{product.product_and_size.size}}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.product_and_size.product.price|floatformat:2 }} €</td>
+
+                <td>{{ product.discounted_price|floatformat:2 }} €</td>
+
+                <td>{{ product.product_and_size.product.discount }} %</td>
+                {% if SupplierInformations.DPH == True%}
+                <td>{{SupplierInformations.dph_size}} %</td>
+                <td>{{product.dph|floatformat:2}} €</td>
+                <td>{{product.price_with_dph|floatformat:2}} €</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+
+
+        </tbody>
+    </table>
+
+    <div class="total">
+
+        <div>
+            <strong>Zhrnutie</strong><br>
+            NA ZAPLATENIE: 26,73 €<br>
+            <strong>Výdané:</strong> 26,73 €
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>Chill, s.r.o.</strong><br>
+        Budatínska 3044/71<br>
+        851 06 Bratislava<br>
+        ICO: 47125641<br>
+        DIC: 2023754601
+    </div>
+
+</body>
+
+</html>
+{% endblock %}
